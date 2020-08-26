@@ -1,0 +1,21 @@
+---
+- name: This playbook install httpd ans start the service
+  hosts: all
+  become: true
+  tasks:
+  - name: Ensure Ubuntu
+    lineinfile:
+            path: /etc/apach2/ports.conf
+            regexp: '^Listen '
+            insertafter: "# /etc/apache2/sites-enabled/000-default.conf"
+            line: Listen 8081
+    when: ansible_os_family == "Debian"
+    notify: restat apache2
+
+    hanndlers:
+  - name: restart apache2
+    service:
+            name: apache2
+            state: restarted
+
+
